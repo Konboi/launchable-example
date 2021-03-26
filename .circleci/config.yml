@@ -1,4 +1,5 @@
-version: 2
+version: 2.1
+
 commands:
   setup:
     description: "setup"
@@ -50,14 +51,13 @@ commands:
           command: launchable record test --build $CIRCLE_WORKFLOW_ID go-test ./rest.xml
           when: always
 
-jobs: #
+jobs:
   build:
     docker:
       - image: circleci/golang:1.16
     working_directory: /go/src/github.com/konboi/launchable-example
-    environment: #
+    environment:
       TEST_RESULTS: /tmp/test-results
-
     steps:
       - setup
       - checkout_code
@@ -66,3 +66,9 @@ jobs: #
       - launchable_subset
       - launchable_record_test
       - teardown
+
+workflows:
+  version: 2.1
+  dev_workflow:
+    jobs:
+      - build
