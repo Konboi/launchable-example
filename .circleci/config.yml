@@ -23,6 +23,11 @@ commands:
       - run: launchable verify || true
       - run: mkdir -p ~/project/test/launchable/
 
+  for_debug:
+    description: "for debug"
+    steps:
+      - run: echo $CIRCLE_WORKFLOW_ID
+
   launchable_record_build:
     description: "Launchable Record Build"
     steps:
@@ -65,6 +70,7 @@ jobs:
       - setup
       - checkout_code
       - launchable_verify
+      - for_debug
       - launchable_record_build
       - launchable_subset
       - launchable_record_test
