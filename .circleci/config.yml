@@ -46,10 +46,13 @@ commands:
           command: launchable record test --build $CIRCLE_WORKFLOW_ID go-test ./subset.xml
           when: always
       - run:
-          command: go test -run $(cat ~/launchable-rest.txt) ./... -v 2>&1 | go-junit-report > rest.xml
-      - run:
-          command: launchable record test --build $CIRCLE_WORKFLOW_ID go-test ./rest.xml
+          command: cat ./subset.xml && cat ~/launchable-subset.xml
           when: always
+      #- run:
+      #    command: go test -run $(cat ~/launchable-rest.txt) ./... -v 2>&1 | go-junit-report > rest.xml
+      #- run:
+      #    command: launchable record test --build $CIRCLE_WORKFLOW_ID go-test ./rest.xml
+      #    when: always
 
 jobs:
   build:
