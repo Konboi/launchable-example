@@ -40,6 +40,7 @@ commands:
       - run: cat ~/launchable-subset.txt | sort
       - run: echo "check session"
       - run: ls -l ~/.config/launchable/sessions
+      - run: echo $CIRCLE_WORKFLOW_ID
 
   launchable_record_test:
     description: "Launchable record test"
@@ -57,6 +58,7 @@ commands:
       - run: |
           echo "check session"
           ls -l ~/.config/launchable/sessions
+          echo $CIRCLE_WORKFLOW_ID
 
       #- run:
       #    command: go test -run $(cat ~/launchable-rest.txt) ./... -v 2>&1 | go-junit-report > rest.xml
