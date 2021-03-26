@@ -31,7 +31,7 @@ commands:
   launchable_subset:
     description: "Launchable subset"
     steps:
-      - run: go test -list ./... | launchable subset --build $CIRCLE_WORKFLOW_ID --target 10% --rest ~/launchable-rest.txt go-test test > ~/launchable-subset.txt
+      - run: go test -list ./... | launchable subset --build $CIRCLE_WORKFLOW_ID --target 10% --rest ~/launchable-rest.txt go-test > ~/launchable-subset.txt
       - run: cat ~/launchable-subset.txt | sort
 
   launchable_record_test:
