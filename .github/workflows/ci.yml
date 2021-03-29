@@ -24,6 +24,8 @@ jobs:
           pip3 install --user --upgrade launchable~=1.0
           go get -u github.com/jstemmer/go-junit-report
           echo "LAUNCHABLE_TOKEN=${LAUNCHABLE_TOKEN}" >> $GITHUB_ENV
+          echo "~/.local/bin" >> $GITHUB_PATH
+          env
           python3 debug.py
       - name: launchable verify
         run: |
