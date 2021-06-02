@@ -26,22 +26,18 @@ jobs:
           echo "LAUNCHABLE_TOKEN=${{ secrets.LAUNCHABLE_TOKEN }}" >> $GITHUB_ENV
           echo "~/.local/bin" >> $GITHUB_PATH
           env
-          python3 debug.py
       - name: launchable verify
         run: |
-          python3 debug.py
           ~/.local/bin/launchable verify || true
       - name: launchable record build
         run: |
           ~/.local/bin/launchable --log-level=debug record build --name $GITHUB_RUN_ID --source .
-          python3 debug.py
       - name: launchable subset
         run: |
           go test -list "Test" ./... | launchable --log-level=debug subset --build $GITHUB_RUN_ID --target 70% --rest ~/launchable-rest.txt go-test > ~/launchable-subset.txt
           cat ~/launchable-subset.txt | sort
           echo "check session"
           ls -l ~/.config/launchable/sessions
-          python3 debug.py
       - name: launchable record tests
         run: |
           go test -run $(cat ~/launchable-subset.txt) ./... -v 2>&1 | go-junit-report > subset.xml
@@ -49,7 +45,6 @@ jobs:
           cat ./subset.xml && cat ~/launchable-subset.txt
           echo "check session"
           ls -l ~/.config/launchable/sessions
-          python3 debug.py
       - name: launchable record tests rest
         run: |
           go test -run $(cat ~/launchable-rest.txt) ./... -v 2>&1 | go-junit-report > rest.xml
@@ -57,4 +52,3 @@ jobs:
           cat ./rest.xml && cat ~/launchable-rest.txt
           echo "check session"
           ls -l ~/.config/launchable/sessions
-          python3 debug.py
