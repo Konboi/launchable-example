@@ -50,3 +50,11 @@ jobs:
           echo "check session"
           ls -l ~/.config/launchable/sessions
           python3 debug.py
+      - name: launchable record tests rest
+        run: |
+          go test -run $(cat ~/launchable-rest.txt) ./... -v 2>&1 | go-junit-report > rest.xml
+          ~/.local/bin/launchable --log-level=debug record test --build $GITHUB_RUN_ID go-test ./rest.xml
+          cat ./rest.xml && cat ~/launchable-rest.txt
+          echo "check session"
+          ls -l ~/.config/launchable/sessions
+          python3 debug.py
