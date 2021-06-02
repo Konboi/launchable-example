@@ -33,11 +33,11 @@ jobs:
           ~/.local/bin/launchable verify || true
       - name: launchable record build
         run: |
-          ~/.local/bin/launchable record build --name $GITHUB_RUN_ID --source .
+          ~/.local/bin/launchable --log-level=debug record build --name $GITHUB_RUN_ID --source .
           python3 debug.py
       - name: launchable subset
         run: |
-          go test -list "Test" ./... | launchable subset --build $GITHUB_RUN_ID --target 10% --rest ~/launchable-rest.txt go-test > ~/launchable-subset.txt
+          go test -list "Test" ./... | launchable --log-level=debug subset --build $GITHUB_RUN_ID --target 70% --rest ~/launchable-rest.txt go-test > ~/launchable-subset.txt
           cat ~/launchable-subset.txt | sort
           echo "check session"
           ls -l ~/.config/launchable/sessions
@@ -45,7 +45,7 @@ jobs:
       - name: launchable record tests
         run: |
           go test -run $(cat ~/launchable-subset.txt) ./... -v 2>&1 | go-junit-report > subset.xml
-          ~/.local/bin/launchable record test --build $GITHUB_RUN_ID go-test ./subset.xml
+          ~/.local/bin/launchable --log-level=debug record test --build $GITHUB_RUN_ID go-test ./subset.xml
           cat ./subset.xml && cat ~/launchable-subset.txt
           echo "check session"
           ls -l ~/.config/launchable/sessions
