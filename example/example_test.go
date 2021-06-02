@@ -28,7 +28,7 @@ func TestEcho(t *testing.T) {
 
 	e := &example.Example{}
 	for _, tc := range tests {
-		if e.Echo(tc.input) == tc.input {
+		if e.Echo(tc.input) != tc.input {
 			t.Error("error echo result invalid", "got:", e.Echo(tc.input), "expect:", tc.input)
 		}
 	}
