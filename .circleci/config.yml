@@ -1,4 +1,5 @@
-version: 2
+version: 2.1
+
 commands:
   setup:
     description: "setup"
@@ -22,16 +23,26 @@ commands:
       - run: launchable verify || true
       - run: mkdir -p ~/project/test/launchable/
 
+  for_debug:
+    description: "for debug"
+    steps:
+      - run: echo $CIRCLE_WORKFLOW_ID
+      - run: python3 debug.py
+
   launchable_record_build:
     description: "Launchable Record Build"
     steps:
       - run: launchable record build --name $CIRCLE_WORKFLOW_ID --source .
+      - run: python3 debug.py
 
   launchable_subset:
     description: "Launchable subset"
     steps:
-      - run: go test -list ./... | launchable subset --build $CIRCLE_WORKFLOW_ID --target 10% --rest ~/launchable-rest.txt go-test test > ~/launchable-subset.txt
+      - run: go test -list "Test" ./... | launchable subset --build $CIRCLE_WORKFLOW_ID --target 10% --rest ~/launchable-rest.txt go-test > ~/launchable-subset.txt
       - run: cat ~/launchable-subset.txt | sort
+      - run: echo "check session"
+      - run: ls -l ~/.config/launchable/sessions
+      - run: python3 debug.py
 
   launchable_record_test:
     description: "Launchable record test"
@@ -45,24 +56,36 @@ commands:
           command: launchable record test --build $CIRCLE_WORKFLOW_ID go-test ./subset.xml
           when: always
       - run:
-          command: go test -run $(cat ~/launchable-rest.txt) ./... -v 2>&1 | go-junit-report > rest.xml
-      - run:
-          command: launchable record test --build $CIRCLE_WORKFLOW_ID go-test ./rest.xml
-          when: always
+          command: cat ./subset.xml && cat ~/launchable-subset.txt
+      - run: |
+          echo "check session"
+          ls -l ~/.config/launchable/sessions
+          python3 debug.py
+      #- run:
+      #    command: go test -run $(cat ~/launchable-rest.txt) ./... -v 2>&1 | go-junit-report > rest.xml
+      #- run:
+      #    command: launchable record test --build $CIRCLE_WORKFLOW_ID go-test ./rest.xml
+      #    when: always
 
-jobs: #
+jobs:
   build:
     docker:
       - image: circleci/golang:1.16
     working_directory: /go/src/github.com/konboi/launchable-example
-    environment: #
+    environment:
       TEST_RESULTS: /tmp/test-results
-
     steps:
       - setup
       - checkout_code
       - launchable_verify
+      - for_debug
       - launchable_record_build
       - launchable_subset
       - launchable_record_test
       - teardown
+
+workflows:
+  version: 2.1
+  dev_workflow:
+    jobs:
+      - build
