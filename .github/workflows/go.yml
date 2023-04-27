@@ -9,7 +9,7 @@ env:
   LAUNCHABLE_TOKEN: ${{ secrets.LAUNCHABLE_TOKEN }}
   LAUNCHABLE_DEBUG: 1
   GITHUB_PR_NUMBER: ${{ github.event.number }}
-  LAUNCHABLE_BASE_URL:  https://911a-14-9-37-161.ngrok.io
+  LAUNCHABLE_BASE_URL:   https://7734-14-9-37-161.jp.ngrok.io
 
 jobs:
   tests:
@@ -39,9 +39,11 @@ jobs:
       - name: Record commits and build
         run: 'launchable record build --name "$GITHUB_RUN_ID"'
       - name: Subset
-        run: go test -list="Test|Example" ./... | launchable subset --confidence 80%  go-test > launchable-subset.txt
+        run: go test -list="Test|Example" ./... | launchable subset --observation --confidence 80%  go-test > launchable-subset.txt
+      - name: debug
+        run: cat launchable-subset.txt
       - name: Test
-        run: go test $(cat launchable-subset.txt) ./... -v 2>&1 | go-junit-report -set-exit-code > report.xml
+        run: go test -run $(cat launchable-subset.txt) ./... -v 2>&1 | go-junit-report -set-exit-code > report.xml
       - name: Record
         run: launchable record tests go-test report.xml
         if: always()
