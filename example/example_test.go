@@ -40,3 +40,31 @@ func TestExampleAdd(t *testing.T) {
 		})
 	}
 }
+
+func TestExampleSub(t *testing.T) {
+	e := &example.Example{}
+
+	tests := map[string]struct {
+		a      int
+		b      int
+		expect int
+	}{
+		"1": {
+			a:      3,
+			b:      3,
+			expect: 0,
+		},
+		"2": {
+			a:      1,
+			b:      4,
+			expect: 3, // 1 - 4 = -3 is correct
+		}}
+
+	for c, tt := range tests {
+		t.Run(c, func(t *testing.T) {
+			if e.Sub(tt.a, tt.b) != tt.expect {
+				t.Errorf("got:%d expect:%d", e.Sub(tt.a, tt.b), tt.expect)
+			}
+		})
+	}
+}
