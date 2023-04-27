@@ -9,7 +9,7 @@ env:
   LAUNCHABLE_TOKEN: ${{ secrets.LAUNCHABLE_TOKEN }}
   LAUNCHABLE_DEBUG: 1
   GITHUB_PR_NUMBER: ${{ github.event.number }}
-  LAUNCHABLE_BASE_URL:   https://7734-14-9-37-161.jp.ngrok.io
+  LAUNCHABLE_BASE_URL:  https://32fd-14-9-37-161.jp.ngrok.io
 
 jobs:
   tests:
